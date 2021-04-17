@@ -1,45 +1,21 @@
+otuba
+
+Gerador de ebooks. Transforma Markdown (.md) para formatos:
+
+* PDF
 # Cotuba
 
-Gerador de ebooks escritos no formato Markdown (`.md`) para os formatos EPUB e PDF.
+Gerador de ebooks. Transforma Markdown (.md) para formatos:
 
-Implementado em Java.
+* PDF
+* EPUB
 
-Pré-requisitos:
+Desenvolvimento com:
 
-- Java 8+
-- Maven 3+
+* Java
+* Maven
+* Shell
 
-Para gerar um arquivo `.zip` com os JARS e os scripts necessários, execute:
+Projeto realizado como parte do curso FJ-38 da Caelum.
 
-```
-mvn install
-```
-
-O `.zip` será gerado na pasta `target`.
-
-Descompacte esse `.zip` em um diretório qualquer.
-
-Rode os comandos abaixo nesse diretório.
-
-Se desejar, use os arquivos `.md` do diretório `exemplo`.
-
-## PDF
-
-Para gerar um PDF, faça:
-
-```
-./cotuba.sh -d diretorio/do/livro -f pdf
-```
-
-Deverá ser gerado um arquivo chamado `book.pdf`.
-
-## EPUB
-
-Para gerar um EPUB, faça:
-
-```
-./cotuba.sh -d diretorio/do/livro -f epub
-```
-
-Deverá ser gerado um arquivo chamado `book.epub`.
 
