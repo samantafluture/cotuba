@@ -1,8 +1,3 @@
-otuba
-
-Gerador de ebooks. Transforma Markdown (.md) para formatos:
-
-* PDF
 # Cotuba
 
 Gerador de ebooks. Transforma Markdown (.md) para formatos:
