@@ -17,6 +17,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import cotuba.domain.Capitulo;
+import cotuba.domain.builder.CapituloBuilder;
 import cotuba.tema.AplicadorTema;
 
 public class RenderizadorMDParaHTMLComCommonMark implements RenderizadorMDParaHTML {
@@ -27,26 +28,26 @@ public class RenderizadorMDParaHTMLComCommonMark implements RenderizadorMDParaHT
 		List<Capitulo> capitulos = new ArrayList<>();
 
 		PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/*.md");
-		
+
 		try (Stream<Path> arquivosMD = Files.list(diretorioDosMD)) {
 			arquivosMD.filter(matcher::matches).sorted().forEach(arquivoMD -> {
-				
-				Capitulo capitulo = new Capitulo(); 
-				
+
+				CapituloBuilder capituloBuilder = new CapituloBuilder();
+
 				Parser parser = Parser.builder().build();
 				Node document = null;
-				
+
 				try {
 					document = parser.parseReader(Files.newBufferedReader(arquivoMD));
 					document.accept(new AbstractVisitor() {
-						
+
 						@Override
 						public void visit(Heading heading) {
 							if (heading.getLevel() == 1) {
 								// capítulo
 								String tituloDoCapitulo = ((Text) heading.getFirstChild()).getLiteral();
-								capitulo.setTitulo(tituloDoCapitulo); 
-								
+								capituloBuilder.comTitulo(tituloDoCapitulo);
+
 							} else if (heading.getLevel() == 2) {
 								// seção
 							} else if (heading.getLevel() == 3) {
@@ -55,28 +56,27 @@ public class RenderizadorMDParaHTMLComCommonMark implements RenderizadorMDParaHT
 						}
 
 					});
-					
+
 				} catch (Exception ex) {
-					
+
 					throw new RuntimeException("Erro ao fazer parse do arquivo " + arquivoMD, ex);
 				}
 
 				try {
 					HtmlRenderer renderer = HtmlRenderer.builder().build();
 					String html = renderer.render(document);
-					
-					 capitulo.setConteudoHTML(html); 
-					 
-					 AplicadorTema tema = new AplicadorTema();
-					 tema.aplica(capitulo); 
-					 
-					 capitulos.add(capitulo);	
+
+					AplicadorTema tema = new AplicadorTema();
+					String htmlComTemas = tema.aplica(html);
+					capituloBuilder.comConteudoHTML(htmlComTemas);
+					Capitulo capitulo = capituloBuilder.constroi();
+					capitulos.add(capitulo);
 
 				} catch (Exception ex) {
 					throw new RuntimeException("Erro ao renderizar para HTML o arquivo " + arquivoMD, ex);
 				}
 			});
-			
+
 		} catch (IOException ex) {
 			throw new RuntimeException("Erro tentando encontrar arquivos .md em " + diretorioDosMD.toAbsolutePath(),
 					ex);

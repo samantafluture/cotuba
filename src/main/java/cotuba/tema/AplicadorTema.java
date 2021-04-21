@@ -5,23 +5,22 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import cotuba.domain.Capitulo;
-import cotuba.plugin.Plugin;
+import cotuba.plugin.Tema;
 
 public class AplicadorTema {
 
-	public void aplica(Capitulo capitulo) {
+	public String aplica(String html) {
+		{
 
-		String html = capitulo.getConteudoHTML();
-		Document document = Jsoup.parse(html);
+			Document document = Jsoup.parse(html);
 
-		List<String> listaDeTemas = Plugin.listaDeTemas();
-		for (String css : listaDeTemas) {
-			document.select("head").append("<style> " + css + " </style>");
+			List<String> listaDeTemas = Tema.listaDeTemas();
+			for (String css : listaDeTemas) {
+				document.select("head").append("<style> " + css + " </style>");
+			}
+
+			return document.html();
+
 		}
-
-		capitulo.setConteudoHTML(document.html());
-
 	}
-
 }

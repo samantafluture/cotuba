@@ -7,7 +7,7 @@ import cotuba.domain.Capitulo;
 import cotuba.domain.Ebook;
 import cotuba.domain.FormatoEbook;
 import cotuba.md.RenderizadorMDParaHTML;
-import cotuba.plugin.Plugin;
+import cotuba.plugin.AoFinalizarGeracao;
 
 public class Cotuba {
 
@@ -20,15 +20,12 @@ public class Cotuba {
 		RenderizadorMDParaHTML renderizador = RenderizadorMDParaHTML.cria();
 		List<Capitulo> capitulos = renderizador.renderiza(diretorioDosMD);
 
-		Ebook ebook = new Ebook();
-		ebook.setFormato(formato);
-		ebook.setArquivoDeSaida(arquivoDeSaida);
-		ebook.setCapitulos(capitulos);
+		Ebook ebook = new Ebook(formato, arquivoDeSaida, capitulos);
 
 		GeradorEbook gerador = GeradorEbook.cria(formato);
 		gerador.gera(ebook);
 		
-		Plugin.gerou(ebook);
+		AoFinalizarGeracao.gerou(ebook);
 
 	}
 }
